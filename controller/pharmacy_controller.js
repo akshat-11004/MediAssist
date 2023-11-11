@@ -14,6 +14,7 @@ module.exports.stocks = async (req, res) => {
             medicines: medicines
         });
 
+
     } catch (error) {
         console.log('Error: ', error.message);
         return res.status(500).json({ msg: 'Internal Server Error' });
