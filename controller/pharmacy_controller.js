@@ -78,7 +78,7 @@ module.exports.add_medicine = async (req, res) => {
         // write a query to insert a medicine into the medicne table and the stores table with 
         // name in req.body.name, brand_name in req.body.brand_name, stock in req.body.stock and 
         // pharma email in req.user.email
-        await pool.query(``);
+        await pool.query(`INSERT into medicine(name,brand_name) VALUES ($1,$2),INSERT INTO stores (email_pharma,name,brand_name,stock) VALUES ($3,$1,$2,$4)`,[req.body.name,req.body.brand_name,req.body.email,req.body.stock]);
 
         req.flash('success', 'Medicine added Successfully!');
         return res.redirect('back');
