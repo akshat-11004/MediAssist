@@ -1,9 +1,11 @@
-// Hackout'23
 // importing express library
 const express = require('express');
+const cors = require('cors');
+const axios = require('axios');
 const app = express();
 
 // decalring the local server port or the Render port
+const dotenv = require('dotenv').config();
 const port = process.env.PORT || 8000;
 
 // providing https server for Render
@@ -28,7 +30,7 @@ const crypto = require('crypto');
 // importing the passport js libraries
 const passport = require('passport');
 const passportLocal = require('./config/passport-local-strategy');
-const passportJWT = require('./config/passport-jwt-strategy');
+// const passportJWT = require('./config/passport-jwt-strategy');
 
 // giving access to the mongo-connect || pg-connect-simple for session storage
 // const MongoStore = require('connect-mongo');
@@ -38,11 +40,14 @@ const PgSession = require('connect-pg-simple')(session);
 const flash = require('connect-flash');
 const customMware = require('./config/flash_middleware');
 
+// Enable cors
+app.use(cors());
+
 // using the httpsRedirect middleware
 app.use('/', httpsRedirect());
 
 // using middleware to parse form data into req.body
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 
 // cookie parser
 app.use(cookieParser());
@@ -71,12 +76,13 @@ app.use(session({
     saveUninitialized: false,
     resave: false,
     cookie: {
-        maxAge: (1000*60*100)
+        maxAge: (1000*60*10)
     },
     // storing the cookie-data in mongo db
     store: new PgSession({
         pool,
-        tableName: 'session'
+        tableName: 'session',
+
     })
 }));
 

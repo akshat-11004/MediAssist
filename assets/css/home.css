@@ -44,6 +44,10 @@ label {
   background: url("../images/manage-pharma.jpg") no-repeat;
   background-size: cover;
 }
+.banner-stocks{
+  background: url("../images/manage-stocks.avif") no-repeat;
+  background-size: cover;
+}
 .banner-manage-lab{
   background: url("../images/manage-lab.jpg") no-repeat;
   background-size: cover;
@@ -51,6 +55,11 @@ label {
 .banner-govt-agency{
   background: url("../images/govt_agency.jpg") no-repeat;
   background-size: cover;
+}
+.banner-ambulance{
+  background: url("../images/ambulance.jpg") no-repeat;
+  background-size: cover;
+
 }
 
 .banner .block {

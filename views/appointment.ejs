@@ -1,22 +1,24 @@
+<title><%=title%></title>
 <link rel="stylesheet" type="text/css" href="/css/appointment.css">
+
 <div class="mt-4">&nbsp;</div>
-<form action="/users/appointment/check-availability" method="post">
+<form action="/users/patient/check-availability/<%=doctor%>" method="post">
     <div class="card m-5 chageColor">
         <div class="d-flex justify-content-center">
             <div class="form-group m-4 w-25">
-                <label for="dob">Date:</label>
+                <label for="dateInput">Date:</label>
                 <%if(locals.date===null){%>
-                    <input class="form-control" type="date" id="dob" name="date" value="<%=user.birth_date%>"
-                        placeholder="Select Date of Birth">
+                    <input class="form-control" type="date" name="date"
+                        placeholder="Select Date for Appointment" id="dateInput" onchange="validateDate()">
                     <%}else{%>
-                        <input class="form-control" type="date" id="dob" name="date" value="<%= locals.date%>"
-                            placeholder="Select Date of Birth">
+                        <input class="form-control" type="date" name="date" value="<%=locals.date%>"
+                            placeholder="Select Date of Birth" id="dateInput" onchange="validateDate()">
                         <%}%>
             </div>
         </div>
     </div>
     <div class="text-center">
-        <button class="btn btn-success my-4 btn-lg" type="submit">check-availability</button>
+        <button class="btn btn-success my-4 btn-lg" type="submit">Check Aavailability</button>
     </div>
 </form>
 <%if(locals.available===true){%>
@@ -24,40 +26,52 @@
         <div class="card p-4 m-2">
             Total available slots : <%= slots.length %>
         </div>
-        <form action="/users/appointment/book-appointment" method="post">
-            <input class="form-control" type="date" id="dob" name="date" value="<%=locals.date%>"
-                style="visibility:hidden;">
-
-            <%slots.forEach((element)=>{%>
-                <div class="btn btn-outline-success m-4 myViewBlock" onclick="selectmyRadio('<%=element.id%>')">
+        <form action="/users/patient/make-appointment/?email=<%= doctor %>&date=<%= date %>" method="post">
+            <% let index = 1; %>
+            <% slots.forEach((element) => { %>
+                <div class="btn btn-outline-success m-4 myViewBlock" onclick="selectmyRadio('<%= index %>')">
                     <div class="form-check m-4">
-                        <input class="form-check-input" type="radio" name="slot" value="<%=element.id%>"
-                            id="<%=element.id%>">
-                        <label class="form-check-label" for="flexRadioDefault1">
+                        <input class="form-check-input" type="radio" name="slot" id="<%= index %>"
+                            value="<%= element.start_time + ',' + element.end_time %>"
+                            <% if (element.is_booked) { %>disabled<% } %>>
+                        <label class="form-check-label" for="<%= index %>">
                             <div>
                                 <div>
-                                    Start time : <%=element.start_time%>
+                                    Start time: <%= element.start_time %>
                                 </div>
                                 <div>
-                                    End time : <%=element.end_time%>
+                                    End time: <%= element.end_time %>
                                 </div>
                             </div>
                         </label>
                     </div>
                 </div>
-                <%});%>
-                    <div class="text-center">
-                        <button class="btn btn-success my-4 btn-lg" type="submit">Book</button>
-                    </div>
-        </form>
+                <% index++; %>
+            <% }); %>
+        
+            <div class="text-center">
+                <button class="btn btn-success my-4 btn-lg" type="submit">Book</button>
+            </div>
+        </form>       
     </div>
     <%}%>
         <div class="mb-2">&nbsp;</div>
         <div class="mb-3">&nbsp;</div>
 
-        <script>
-            function selectmyRadio(id) {
-                var radioButton = document.getElementById(id);
-                radioButton.checked = true;
-            }
-        </script>
+<script>
+    function selectmyRadio(id) {
+        var radioButton = document.getElementById(id);
+        radioButton.checked = true;
+    }
+
+    function validateDate() {
+        var selectedDate = new Date(document.getElementById("dateInput").value);
+  
+        var today = new Date();
+  
+        if (selectedDate <= today) {
+          alert("Please select a date greater than today's date");
+          document.getElementById("dateInput").value = "";
+        }
+      }
+</script>
